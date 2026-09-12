@@ -7,107 +7,472 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: #0d0d0d; color: #ffffff; padding-bottom: 75px; user-select: none; }
-    .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #141414; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100; }
-    .container { padding: 16px; max-width: 480px; margin: 0 auto; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .banner { background: linear-gradient(180deg, #3d0507 0%, #1a0304 100%); border: 1px solid #5a1114; border-radius: 12px; padding: 14px 16px; text-align: center; margin-bottom: 20px; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #0d0d0d;
+      color: #ffffff;
+      padding-bottom: 80px;
+      user-select: none;
+      overflow-x: hidden;
+    }
+
+    /* شاشة البداية المتحركة بحرف N */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #000000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+    .netflix-intro-logo {
+      width: 130px;
+      height: auto;
+      animation: netflixAnim 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      filter: drop-shadow(0 0 20px rgba(229, 9, 20, 0.8));
+    }
+    @keyframes netflixAnim {
+      0% { transform: scale(0.5); opacity: 0; }
+      35% { transform: scale(1); opacity: 1; }
+      75% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+
+    /* شريط الرأس العلوي */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #141414;
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .menu-btn {
+      font-size: 26px;
+      cursor: pointer;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding: 2px 6px;
+    }
+    .brand-title {
+      color: #e50914;
+      font-weight: 900;
+      font-size: 20px;
+      letter-spacing: 1px;
+    }
+    .balance-badge {
+      background: #1f1f1f;
+      border: 1px solid #333;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #4cd964;
+    }
+
+    /* الحاوية والتبويبات */
+    .container {
+      padding: 16px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* البانر الإعلاني */
+    .banner {
+      background: linear-gradient(180deg, #3d0507 0%, #1a0304 100%);
+      border: 1px solid #5a1114;
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
     .banner h3 { font-size: 15px; font-weight: 700; color: #fff; }
     .banner p { font-size: 12px; color: #bbb; margin-top: 4px; }
-    .section-title { font-size: 14px; font-weight: 700; color: #ddd; margin-bottom: 12px; }
-    .card { background: #141414; border: 1px solid #262626; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ddd;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* بطاقات المنتجات */
+    .card {
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
     .card-title { font-size: 15px; font-weight: 700; color: #ffffff; }
-    .card-price { font-size: 15px; font-weight: 800; color: #e50914; margin-top: 4px; direction: ltr; text-align: right; }
-    .card-icon { width: 42px; height: 42px; background: #000; border-radius: 8px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #e50914; }
-    .btn-action { width: 100%; background: #e50914; color: white; border: none; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 700; margin-top: 14px; cursor: pointer; }
-    .binance-box { background: #181818; border: 1px solid #333; border-radius: 10px; padding: 16px; text-align: center; }
-    .binance-id { font-size: 18px; font-weight: 900; color: #f3ba2f; letter-spacing: 1px; margin: 10px 0; background: #222; padding: 6px; border-radius: 6px; display: inline-block; }
-    .input-box { width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; margin-top: 8px; text-align: center; }
-    .order-item { background: #141414; border: 1px solid #262626; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
-    .order-code { background: #000; border: 1px dashed #333; padding: 10px; border-radius: 6px; font-size: 13px; color: #4cd964; direction: ltr; text-align: center; margin-top: 8px; }
-    .support-card { text-align: center; padding: 30px 16px; background: #141414; border-radius: 12px; border: 1px solid #222; }
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: #121212; border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #777; font-size: 11px; cursor: pointer; flex: 1; }
+    .card-price {
+      font-size: 16px;
+      font-weight: 900;
+      color: #e50914;
+      margin-top: 4px;
+      direction: ltr;
+      text-align: right;
+    }
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      background: #000;
+      border-radius: 8px;
+      border: 1px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .btn-action {
+      width: 100%;
+      background: #e50914;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 14px;
+      cursor: pointer;
+    }
+    .btn-action:active { background: #b81d24; }
+
+    /* النافذة المنبثقة للشرح عند ضغط ☰ */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(5px);
+      z-index: 2000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-box {
+      background: #161616;
+      border: 1px solid #333;
+      border-radius: 14px;
+      padding: 18px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #282828;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+    }
+    .close-btn {
+      font-size: 22px;
+      color: #aaa;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .guide-step {
+      background: #101010;
+      border-right: 3px solid #e50914;
+      padding: 10px 12px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #ddd;
+    }
+    .guide-step strong {
+      color: #fff;
+      display: block;
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    /* بطاقات المهام داخل النافذة */
+    .task-box {
+      background: #0d0d0d;
+      border: 1px solid #282828;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .task-details h4 { font-size: 13px; color: #fff; }
+    .task-details span { font-size: 11px; color: #4cd964; font-weight: 700; }
+    .join-link {
+      background: #229ED9;
+      color: #fff;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* بينانس */
+    .binance-box {
+      background: #181818;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .binance-id {
+      font-size: 18px;
+      font-weight: 900;
+      color: #f3ba2f;
+      letter-spacing: 1px;
+      margin: 10px 0;
+      background: #222;
+      padding: 8px 14px;
+      border-radius: 6px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    .input-box {
+      width: 100%;
+      padding: 12px;
+      background: #111;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 8px;
+      margin-top: 8px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    /* الطلبات */
+    .order-item {
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .order-code {
+      background: #000;
+      border: 1px dashed #333;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #4cd964;
+      direction: ltr;
+      text-align: center;
+      margin-top: 8px;
+      word-break: break-all;
+    }
+
+    /* شريط التنقل السفلي */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #121212;
+      border-top: 1px solid #222;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #777;
+      font-size: 11px;
+      cursor: pointer;
+      flex: 1;
+    }
     .nav-item.active { color: #e50914; }
-    .nav-item svg { width: 20px; height: 20px; fill: currentColor; margin-bottom: 2px; }
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      margin-bottom: 2px;
+    }
   </style>
 </head>
 <body>
 
+  <!-- شاشة الدخول N -->
+  <div id="splash-screen">
+    <svg class="netflix-intro-logo" viewBox="0 0 111 200" fill="none">
+      <path d="M0 0H37.037V200H0V0Z" fill="#B81D24"/>
+      <path d="M74.074 0H111.111V200H74.074V0Z" fill="#B81D24"/>
+      <path d="M0 0L74.074 200H111.111L37.037 0H0Z" fill="#E50914"/>
+    </svg>
+  </div>
+
+  <!-- الشريط العلوي -->
   <div class="header">
-    <span style="font-size: 20px;">☰</span>
-    <span style="color:#e50914; font-weight:900; font-size:20px; letter-spacing:1px;">NETFLIX</span>
-    <span style="opacity:0;">☰</span>
+    <div class="menu-btn" onclick="openGuideModal()">☰</div>
+    <div class="brand-title">NETFLIX</div>
+    <div class="balance-badge" id="userBalanceBadge">رصيدك: $0.00</div>
   </div>
 
   <div class="container">
-    <!-- الرئيسية -->
+
+    <!-- 1. الرئيسية -->
     <div id="tab-home" class="tab-content active">
       <div class="banner">
         <h3>متجر نتفلكس - تسليم فوري وتلقائي 🍿</h3>
         <p>حسابات مضمونة عبر روابط وأكواد نشطة</p>
       </div>
 
-      <div class="section-title">🔗 باقات نتفلكس المتوفرة</div>
+      <div class="section-title">⚡ باقات الحسابات المتوفرة</div>
 
       <div class="card">
         <div class="card-header">
           <div>
             <div class="card-title">حساب نتفلكس (رابط تفعيل)</div>
-            <div class="card-price">$1.99</div>
+            <div class="card-price">$0.50</div>
           </div>
           <div class="card-icon">🔗</div>
         </div>
-        <button class="btn-action" onclick="purchase('رابط تفعيل', '$1.99')">شراء الآن</button>
+        <button class="btn-action" onclick="purchase('رابط تفعيل', 0.50)">شراء الآن</button>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div>
             <div class="card-title">حساب نتفلكس (تلفاز TV)</div>
-            <div class="card-price">$3.00</div>
+            <div class="card-price">$0.50</div>
           </div>
           <div class="card-icon">📺</div>
         </div>
-        <button class="btn-action" onclick="purchase('شاشة تلفاز TV', '$3.00')">شراء الآن</button>
+        <button class="btn-action" onclick="purchase('شاشة تلفاز TV', 0.50)">شراء الآن</button>
       </div>
     </div>
 
-    <!-- شحن الرصيد -->
+    <!-- 2. شحن الرصيد -->
     <div id="tab-charge" class="tab-content">
       <div class="section-title">💳 شحن الرصيد عبر Binance Pay</div>
       <div class="binance-box">
         <p style="font-size:13px; color:#bbb;">معرف الدفع على بينانس:</p>
-        <div class="binance-id">ID: 82937104</div>
+        <div class="binance-id" onclick="copyId()">ID: 82937104 📋</div>
         <p style="font-size:11px; color:#888;">العملة المدعومة: USDT</p>
       </div>
-      <div style="margin-top:16px;">
+
+      <div style="margin-top: 16px;">
         <input type="text" id="binanceTx" class="input-box" placeholder="أدخل رقم العملية (TxID)">
         <button class="btn-action" onclick="submitDeposit()">إرسال طلب الشحن للمراجعة</button>
       </div>
     </div>
 
-    <!-- طلباتي -->
+    <!-- 3. طلباتي -->
     <div id="tab-orders" class="tab-content">
       <div class="section-title">📦 الحسابات المشتراة</div>
       <div id="ordersContainer"></div>
     </div>
 
-    <!-- الدعم -->
+    <!-- 4. الدعم -->
     <div id="tab-support" class="tab-content">
-      <div class="support-card">
+      <div style="text-align: center; padding: 30px 16px; background: #141414; border-radius: 12px; border: 1px solid #222;">
         <div style="font-size:42px; margin-bottom:12px;">👨‍💻</div>
-        <h3 style="font-size:17px; margin-bottom:8px;">الدعم الفني</h3>
-        <p style="font-size:12px; color:#aaa; margin-bottom:20px;">تواصل معنا مباشرة عبر تليجرام لحل أي مشكلة</p>
-        <button class="btn-action" style="background:#229ED9;" onclick="contactDev()">مراسلة الدعم</button>
+        <h3 style="font-size:17px; margin-bottom:8px;">الدعم الفني المباشر</h3>
+        <p style="font-size:12px; color:#aaa; margin-bottom:20px; line-height:1.6;">
+          تواصل مع المطور في حال واجهتك أي مشكلة أو كان لديك استفسار بخصوص الحسابات والشحن
+        </p>
+        <button class="btn-action" style="background:#229ED9;" onclick="contactDev()">مراسلة المطور عبر تليجرام</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- نافذة الشرح الكامل والمهام المنبثقة عند الضغط على ☰ -->
+  <div class="modal-overlay" id="guideModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 style="font-size: 16px; color:#fff;">📖 طريقة الاستخدام والشراء</h3>
+        <span class="close-btn" onclick="closeGuideModal()">✖</span>
+      </div>
+
+      <div class="guide-step">
+        <strong>1. جمع الرصيد المجاني ($0.50):</strong>
+        سعر الحساب موحد ($0.50). يمكنك الحصول عليه مجاناً بالانضمام للقناتين التاليتين والضغط على زر التحقق بالأسفل.
+      </div>
+
+      <div class="task-box">
+        <div class="task-details">
+          <h4>قناة التحديثات</h4>
+          <span>مكافأة: +$0.25</span>
+        </div>
+        <a href="https://t.me/Ref_changes" target="_blank" class="join-link" onclick="recordClick(1)">انضمام</a>
+      </div>
+
+      <div class="task-box">
+        <div class="task-details">
+          <h4>قناة العروض</h4>
+          <span>مكافأة: +$0.25</span>
+        </div>
+        <a href="https://t.me/H_E_I_A" target="_blank" class="join-link" onclick="recordClick(2)">انضمام</a>
+      </div>
+
+      <button class="btn-action" style="background:#4cd964; color:#000; margin-top:8px;" onclick="verifyAndReward()">
+        تحقق وتفعيل الرصيد ($0.50) ✅
+      </button>
+
+      <div class="guide-step" style="margin-top: 14px;">
+        <strong>2. إتمام الشراء:</strong>
+        بعد تفعيل الرصيد، عد للرئيسية واضغط "شراء الآن" على الحساب الذي تريده.
+      </div>
+
+      <div class="guide-step">
+        <strong>3. استلام الكود:</strong>
+        ستجد رابط الحساب أو كود التلفاز جاهزاً مباشرة داخل تبويب <b>"طلباتي"</b>.
+      </div>
+
+      <div class="guide-step">
+        <strong>4. شحن رصيد إضافي:</strong>
+        يمكنك الشحن في أي وقت مستقبلاً عبر Binance Pay من قسم "شحن الرصيد".
       </div>
     </div>
   </div>
 
-  <!-- الشريط السفلي -->
+  <!-- الشريط السفلي (4 تبويبات) -->
   <div class="bottom-nav">
     <div class="nav-item active" onclick="switchTab('home', this)">
       <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -128,238 +493,154 @@
   </div>
 
   <script>
-    const tg = window.Telegram?.WebApp;
-    if (tg) { tg.ready(); tg.expand(); }
+    const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+    if (tg) {
+      try { tg.ready(); tg.expand(); } catch (e) {}
+    }
 
+    // إخفاء شاشة البداية N
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) {
+          splash.style.opacity = '0';
+          setTimeout(() => { splash.style.visibility = 'hidden'; }, 600);
+        }
+      }, 2100);
+      updateBalance();
+    });
+
+    // إدارة الرصيد
+    function getBal() {
+      return parseFloat(localStorage.getItem('user_nf_balance') || '0.00');
+    }
+    function setBal(val) {
+      localStorage.setItem('user_nf_balance', val.toFixed(2));
+      updateBalance();
+    }
+    function updateBalance() {
+      const badge = document.getElementById('userBalanceBadge');
+      if (badge) badge.innerText = `رصيدك: $${getBal().toFixed(2)}`;
+    }
+
+    // فتح وإغلاق نافذة الشرح
+    function openGuideModal() {
+      document.getElementById('guideModal').classList.add('active');
+    }
+    function closeGuideModal() {
+      document.getElementById('guideModal').classList.remove('active');
+    }
+
+    // متابعة الضغط على القنوات
+    let ch1 = false, ch2 = false;
+    function recordClick(n) {
+      if (n === 1) ch1 = true;
+      if (n === 2) ch2 = true;
+    }
+
+    function verifyAndReward() {
+      if (localStorage.getItem('tasks_claimed_status') === 'true') {
+        alert("لقد استلمت المكافأة مسبقاً!");
+        closeGuideModal();
+        return;
+      }
+      if (!ch1 || !ch2) {
+        alert("يرجى الضغط على زر الانضمام لكلتا القناتين أولاً!");
+        return;
+      }
+      setBal(getBal() + 0.50);
+      localStorage.setItem('tasks_claimed_status', 'true');
+      alert("تم التحقق بنجاح وإضافة 0.50$ إلى رصيدك! يمكنك الآن شراء الحساب مجاناً.");
+      closeGuideModal();
+    }
+
+    // التبديل بين الأقسام
     function switchTab(tabId, el) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-      document.getElementById('tab-' + tabId).classList.add('active');
-      el.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      
+      const target = document.getElementById('tab-' + tabId);
+      if (target) target.classList.add('active');
+      if (el) el.classList.add('active');
+
       if (tabId === 'orders') renderOrders();
     }
 
-    function renderOrders() {
-      const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
-      const box = document.getElementById('ordersContainer');
-      if (orders.length === 0) {
-        box.innerHTML = '<p style="text-align:center; color:#777; padding:20px;">لا توجد طلبات سابقة.</p>';
+    // الشراء
+    function purchase(name, price) {
+      const current = getBal();
+      if (current < price) {
+        alert(`رصيدك ($${current.toFixed(2)}) غير كافٍ!\nاضغط على (☰) في أعلى الصفحة لإكمال المهام والحصول على $0.50 مجاناً.`);
         return;
       }
-      box.innerHTML = orders.map(o => `
+
+      if (confirm(`تأكيد شراء حساب نتفلكس (${name}) بقيمة $${price.toFixed(2)}؟`)) {
+        setBal(current - price);
+
+        const orders = JSON.parse(localStorage.getItem('orders_store') || '[]');
+        const code = name.includes('رابط')
+          ? 'https://netflix.com/activate?token=NF-' + Math.floor(100000 + Math.random() * 900000)
+          : 'TV CODE: ' + Math.floor(100 + Math.random() * 900) + '-' + Math.floor(100 + Math.random() * 900);
+
+        orders.unshift({
+          name: name,
+          date: new Date().toLocaleDateString('ar-EG'),
+          code: code
+        });
+        localStorage.setItem('orders_store', JSON.stringify(orders));
+
+        alert("تم الشراء بنجاح! انتقل إلى تبويب 'طلباتي' لاستلام الحساب.");
+      }
+    }
+
+    // عرض الطلبات
+    function renderOrders() {
+      const orders = JSON.parse(localStorage.getItem('orders_store') || '[]');
+      const container = document.getElementById('ordersContainer');
+      if (!container) return;
+
+      if (orders.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:#777; padding:40px 10px;">لا توجد حسابات مشتراة حتى الآن.</div>';
+        return;
+      }
+
+      container.innerHTML = orders.map(o => `
         <div class="order-item">
-          <div style="display:flex; justify-content:space-between; font-weight:bold;">
-            <span>${o.name}</span>
+          <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:700;">
+            <span>حساب نتفلكس (${o.name})</span>
             <span style="color:#4cd964;">نشط</span>
           </div>
-          <div style="font-size:11px; color:#777; margin-top:4px;">${o.date}</div>
+          <div style="font-size:11px; color:#777; margin-top:3px;">تاريخ الشراء: ${o.date}</div>
           <div class="order-code">${o.code}</div>
         </div>
       `).join('');
     }
 
-    function purchase(name, price) {
-      if (confirm(`تأكيد طلب ${name} بقيمة ${price}؟`)) {
-        const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
-        const mock = name.includes('رابط') ? 'https://netflix.com/activate?token=NF84920' : 'TV CODE: 489-102';
-        orders.unshift({ name: name, date: new Date().toLocaleDateString('ar-EG'), code: mock });
-        localStorage.setItem('my_orders', JSON.stringify(orders));
-        alert('تم الطلب بنجاح! راجع خانة طلباتي للحصول على الكود.');
-      }
+    // نسخ معرف بينانس
+    function copyId() {
+      navigator.clipboard.writeText("82937104");
+      alert("تم نسخ Binance ID بنجاح: 82937104");
     }
 
+    // إرسال رقم العملية
     function submitDeposit() {
-      const tx = document.getElementById('binanceTx').value;
-      if (!tx) return alert('أدخل رقم العملية أولاً');
-      alert('تم إرسال طلب الشحن، سيتم تحديث رصيدك قريباً.');
-      document.getElementById('binanceTx').value = '';
-    }
-
-    function contactDev() {
-      window.open('https://t.me/telegram', '_blank');
-    }
-  </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>متجر حسابات نتفلكس</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: #0d0d0d; color: #ffffff; padding-bottom: 75px; user-select: none; }
-    .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #141414; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 100; }
-    .container { padding: 16px; max-width: 480px; margin: 0 auto; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .banner { background: linear-gradient(180deg, #3d0507 0%, #1a0304 100%); border: 1px solid #5a1114; border-radius: 12px; padding: 14px 16px; text-align: center; margin-bottom: 20px; }
-    .banner h3 { font-size: 15px; font-weight: 700; color: #fff; }
-    .banner p { font-size: 12px; color: #bbb; margin-top: 4px; }
-    .section-title { font-size: 14px; font-weight: 700; color: #ddd; margin-bottom: 12px; }
-    .card { background: #141414; border: 1px solid #262626; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
-    .card-title { font-size: 15px; font-weight: 700; color: #ffffff; }
-    .card-price { font-size: 15px; font-weight: 800; color: #e50914; margin-top: 4px; direction: ltr; text-align: right; }
-    .card-icon { width: 42px; height: 42px; background: #000; border-radius: 8px; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #e50914; }
-    .btn-action { width: 100%; background: #e50914; color: white; border: none; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 700; margin-top: 14px; cursor: pointer; }
-    .binance-box { background: #181818; border: 1px solid #333; border-radius: 10px; padding: 16px; text-align: center; }
-    .binance-id { font-size: 18px; font-weight: 900; color: #f3ba2f; letter-spacing: 1px; margin: 10px 0; background: #222; padding: 6px; border-radius: 6px; display: inline-block; }
-    .input-box { width: 100%; padding: 12px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; margin-top: 8px; text-align: center; }
-    .order-item { background: #141414; border: 1px solid #262626; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
-    .order-code { background: #000; border: 1px dashed #333; padding: 10px; border-radius: 6px; font-size: 13px; color: #4cd964; direction: ltr; text-align: center; margin-top: 8px; }
-    .support-card { text-align: center; padding: 30px 16px; background: #141414; border-radius: 12px; border: 1px solid #222; }
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: #121212; border-top: 1px solid #222; display: flex; justify-content: space-around; align-items: center; z-index: 100; }
-    .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; color: #777; font-size: 11px; cursor: pointer; flex: 1; }
-    .nav-item.active { color: #e50914; }
-    .nav-item svg { width: 20px; height: 20px; fill: currentColor; margin-bottom: 2px; }
-  </style>
-</head>
-<body>
-
-  <div class="header">
-    <span style="font-size: 20px;">☰</span>
-    <span style="color:#e50914; font-weight:900; font-size:20px; letter-spacing:1px;">NETFLIX</span>
-    <span style="opacity:0;">☰</span>
-  </div>
-
-  <div class="container">
-    <!-- الرئيسية -->
-    <div id="tab-home" class="tab-content active">
-      <div class="banner">
-        <h3>متجر نتفلكس - تسليم فوري وتلقائي 🍿</h3>
-        <p>حسابات مضمونة عبر روابط وأكواد نشطة</p>
-      </div>
-
-      <div class="section-title">🔗 باقات نتفلكس المتوفرة</div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">حساب نتفلكس (رابط تفعيل)</div>
-            <div class="card-price">$1.99</div>
-          </div>
-          <div class="card-icon">🔗</div>
-        </div>
-        <button class="btn-action" onclick="purchase('رابط تفعيل', '$1.99')">شراء الآن</button>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">حساب نتفلكس (تلفاز TV)</div>
-            <div class="card-price">$3.00</div>
-          </div>
-          <div class="card-icon">📺</div>
-        </div>
-        <button class="btn-action" onclick="purchase('شاشة تلفاز TV', '$3.00')">شراء الآن</button>
-      </div>
-    </div>
-
-    <!-- شحن الرصيد -->
-    <div id="tab-charge" class="tab-content">
-      <div class="section-title">💳 شحن الرصيد عبر Binance Pay</div>
-      <div class="binance-box">
-        <p style="font-size:13px; color:#bbb;">معرف الدفع على بينانس:</p>
-        <div class="binance-id">ID: 82937104</div>
-        <p style="font-size:11px; color:#888;">العملة المدعومة: USDT</p>
-      </div>
-      <div style="margin-top:16px;">
-        <input type="text" id="binanceTx" class="input-box" placeholder="أدخل رقم العملية (TxID)">
-        <button class="btn-action" onclick="submitDeposit()">إرسال طلب الشحن للمراجعة</button>
-      </div>
-    </div>
-
-    <!-- طلباتي -->
-    <div id="tab-orders" class="tab-content">
-      <div class="section-title">📦 الحسابات المشتراة</div>
-      <div id="ordersContainer"></div>
-    </div>
-
-    <!-- الدعم -->
-    <div id="tab-support" class="tab-content">
-      <div class="support-card">
-        <div style="font-size:42px; margin-bottom:12px;">👨‍💻</div>
-        <h3 style="font-size:17px; margin-bottom:8px;">الدعم الفني</h3>
-        <p style="font-size:12px; color:#aaa; margin-bottom:20px;">تواصل معنا مباشرة عبر تليجرام لحل أي مشكلة</p>
-        <button class="btn-action" style="background:#229ED9;" onclick="contactDev()">مراسلة الدعم</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- الشريط السفلي -->
-  <div class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab('home', this)">
-      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      <span>الرئيسية</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('charge', this)">
-      <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-      <span>شحن الرصيد</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('orders', this)">
-      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-      <span>طلباتي</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('support', this)">
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
-      <span>الدعم</span>
-    </div>
-  </div>
-
-  <script>
-    const tg = window.Telegram?.WebApp;
-    if (tg) { tg.ready(); tg.expand(); }
-
-    function switchTab(tabId, el) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-      document.getElementById('tab-' + tabId).classList.add('active');
-      el.classList.add('active');
-      if (tabId === 'orders') renderOrders();
-    }
-
-    function renderOrders() {
-      const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
-      const box = document.getElementById('ordersContainer');
-      if (orders.length === 0) {
-        box.innerHTML = '<p style="text-align:center; color:#777; padding:20px;">لا توجد طلبات سابقة.</p>';
+      const tx = document.getElementById('binanceTx').value.trim();
+      if (!tx) {
+        alert("يرجى إدخال رقم العملية (TxID) أولاً!");
         return;
       }
-      box.innerHTML = orders.map(o => `
-        <div class="order-item">
-          <div style="display:flex; justify-content:space-between; font-weight:bold;">
-            <span>${o.name}</span>
-            <span style="color:#4cd964;">نشط</span>
-          </div>
-          <div style="font-size:11px; color:#777; margin-top:4px;">${o.date}</div>
-          <div class="order-code">${o.code}</div>
-        </div>
-      `).join('');
-    }
-
-    function purchase(name, price) {
-      if (confirm(`تأكيد طلب ${name} بقيمة ${price}؟`)) {
-        const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
-        const mock = name.includes('رابط') ? 'https://netflix.com/activate?token=NF84920' : 'TV CODE: 489-102';
-        orders.unshift({ name: name, date: new Date().toLocaleDateString('ar-EG'), code: mock });
-        localStorage.setItem('my_orders', JSON.stringify(orders));
-        alert('تم الطلب بنجاح! راجع خانة طلباتي للحصول على الكود.');
-      }
-    }
-
-    function submitDeposit() {
-      const tx = document.getElementById('binanceTx').value;
-      if (!tx) return alert('أدخل رقم العملية أولاً');
-      alert('تم إرسال طلب الشحن، سيتم تحديث رصيدك قريباً.');
+      alert("تم إرسال طلب الشحن بنجاح، سيتم شحن الرصيد فور المراجعة.");
       document.getElementById('binanceTx').value = '';
     }
 
+    // الدعم الفني
     function contactDev() {
-      window.open('https://t.me/telegram', '_blank');
+      const dev = "your_username";
+      if (tg) {
+        tg.openTelegramLink(`https://t.me/${dev}`);
+      } else {
+        window.open(`https://t.me/${dev}`, '_blank');
+      }
     }
   </script>
 </body>
