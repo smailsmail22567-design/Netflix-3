@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>متجر حسابات نتفلكس | Bot</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: #0d0d0d;
+      color: #ffffff;
+      padding-bottom: 75px;
+      user-select: none;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #141414;
+      border-bottom: 1px solid #222;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .menu-icon {
+      font-size: 20px;
+      color: #fff;
+    }
+    .container {
+      padding: 16px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .banner {
+      background: linear-gradient(180deg, #3d0507 0%, #1a0304 100%);
+      border: 1px solid #5a1114;
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .banner h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .banner p {
+      font-size: 12px;
+      color: #bbb;
+      margin-top: 4px;
+    }
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ddd;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card {
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .card-price {
+      font-size: 15px;
+      font-weight: 800;
+      color: #e50914;
+      margin-top: 4px;
+      direction: ltr;
+      text-align: right;
+    }
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      background: #000;
+      border-radius: 8px;
+      border: 1px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #e50914;
+    }
+    .btn-action {
+      width: 100%;
+      background: #e50914;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 14px;
+      cursor: pointer;
+    }
+    .btn-action:active {
+      background: #b81d24;
+    }
+    .binance-box {
+      background: #181818;
+      border: 1px solid #333;
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .binance-id {
+      font-size: 18px;
+      font-weight: 900;
+      color: #f3ba2f;
+      letter-spacing: 1px;
+      margin: 10px 0;
+      cursor: pointer;
+      background: #222;
+      padding: 6px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .input-box {
+      width: 100%;
+      padding: 12px;
+      background: #111;
+      border: 1px solid #333;
+      color: #fff;
+      border-radius: 8px;
+      margin-top: 8px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .order-item {
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .order-code {
+      background: #000;
+      border: 1px dashed #333;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #4cd964;
+      direction: ltr;
+      text-align: center;
+      margin-top: 8px;
+      word-break: break-all;
+    }
+    .empty-orders {
+      text-align: center;
+      padding: 40px 10px;
+      color: #777;
+      font-size: 14px;
+    }
+    .support-card {
+      text-align: center;
+      padding: 30px 16px;
+      background: #141414;
+      border-radius: 12px;
+      border: 1px solid #222;
+    }
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #121212;
+      border-top: 1px solid #222;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #777;
+      font-size: 11px;
+      cursor: pointer;
+      flex: 1;
+    }
+    .nav-item.active {
+      color: #e50914;
+    }
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      margin-bottom: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <span class="menu-icon">☰</span>
+    <span style="color:#e50914; font-weight:900; font-size:20px; letter-spacing:1px;">NETFLIX</span>
+    <span style="opacity: 0;">☰</span>
+  </div>
+
+  <div class="container">
+
+    <!-- تبويب 1: الرئيسية (فقط الخانتين المطلوبتين) -->
+    <div id="tab-home" class="tab-content active">
+      <div class="banner">
+        <h3>متجر نتفلكس - تسليم فوري وتلقائي 🍿</h3>
+        <p>حسابات مضمونة عبر روابط وأكواد نشطة</p>
+      </div>
+
+      <div class="section-title">
+        <span>🔗 طلب سريع</span>
+      </div>
+
+      <!-- خانة 1: حساب برابط -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">حساب نتفلكس (رابط تفعيل)</div>
+            <div class="card-price">$1.99</div>
+          </div>
+          <div class="card-icon">🔗</div>
+        </div>
+        <button class="btn-action" onclick="purchase('link', 1.99)">شراء الآن</button>
+      </div>
+
+      <!-- خانة 2: حساب بتلفاز TV -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">حساب نتفلكس (تلفاز TV)</div>
+            <div class="card-price">$3.00</div>
+          </div>
+          <div class="card-icon">📺</div>
+        </div>
+        <button class="btn-action" onclick="purchase('tv', 3.00)">شراء الآن</button>
+      </div>
+    </div>
+
+    <!-- تبويب 2: شحن الرصيد عبر Binance Pay -->
+    <div id="tab-charge" class="tab-content">
+      <div class="section-title">💳 شحن الرصيد بواسطة Binance ID</div>
+      <div class="binance-box">
+        <p style="font-size:13px; color:#bbb;">قم بإرسال المبلغ عبر تطبيق بينانس إلى المعرف التالي:</p>
+        <div class="binance-id" onclick="copyId()">ID: 82937104 📋</div>
+        <p style="font-size:11px; color:#888;">العملة المدعومة: USDT</p>
+      </div>
+
+      <div style="margin-top: 16px;">
+        <label style="font-size: 12px; color: #aaa;">أدخل رقم المعاملة (TxID) أو معرف حسابك لتأكيد الشحن:</label>
+        <input type="text" id="binanceTx" class="input-box" placeholder="مثال: 984729104">
+        <button class="btn-action" onclick="submitDeposit()">إرسال طلب الشحن للمراجعة</button>
+      </div>
+    </div>
+
+    <!-- تبويب 3: طلباتي (الحسابات المشتراة) -->
+    <div id="tab-orders" class="tab-content">
+      <div class="section-title">📦 الحسابات التي اشتريتها</div>
+      <div id="ordersContainer"></div>
+    </div>
+
+    <!-- تبويب 4: الدعم الفني -->
+    <div id="tab-support" class="tab-content">
+      <div class="support-card">
+        <div style="font-size:42px; margin-bottom:12px;">👨‍💻</div>
+        <h3 style="font-size:17px; margin-bottom:8px;">الدعم الفني المباشر</h3>
+        <p style="font-size:12px; color:#aaa; margin-bottom:20px; line-height:1.6;">
+          تواصل مع المطور في حال وجود أي مشكلة في الحسابات أو استفسار حول الشحن
+        </p>
+        <button class="btn-action" style="background:#229ED9;" onclick="contactDev()">مراسلة المطور عبر تليجرام</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- الشريط السفلي -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('home', this)">
+      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span>الرئيسية</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('charge', this)">
+      <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+      <span>شحن الرصيد</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('orders', this)">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      <span>طلباتي</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('support', this)">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 16h-2v-2h2v2zm1.07-7.75l-.9.92C12.45 11.9 12 12.5 12 14h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+      <span>الدعم</span>
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    // إدارة التبويبات
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      el.classList.add('active');
+
+      if (tabId === 'orders') renderOrders();
+    }
+
+    // تخزين وعرض الطلبات محلياً
+    function renderOrders() {
+      const orders = JSON.parse(localStorage.getItem('my_netflix_orders') || '[]');
+      const container = document.getElementById('ordersContainer');
+      
+      if (orders.length === 0) {
+        container.innerHTML = '<div class="empty-orders">لا توجد طلبات سابقة حتى الآن.</div>';
+        return;
+      }
+
+      container.innerHTML = orders.map(order => `
+        <div class="order-item">
+          <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:700;">
+            <span>${order.name}</span>
+            <span style="color:#4cd964;">جاهز للاستخدام</span>
+          </div>
+          <div style="font-size:11px; color:#777; margin-top:3px;">التاريخ: ${order.date}</div>
+          <div class="order-code">${order.data}</div>
+        </div>
+      `).join('');
+    }
+
+    // شراء حساب
+    function purchase(type, price) {
+      const name = type === 'link' ? 'نتفلكس (رابط تفعيل)' : 'نتفلكس (تلفاز TV)';
+      
+      if (confirm(`هل ترغب في تأكيد شراء ${name} بسعر $${price}؟`)) {
+        // إرسال البيانات للبوت
+        if (tg) {
+          tg.sendData(JSON.stringify({ action: "buy", type: type, price: price }));
+        }
+
+        // إضافة طلب تجريبي للسجل داخل الواجهة
+        const orders = JSON.parse(localStorage.getItem('my_netflix_orders') || '[]');
+        const mockCode = type === 'link' ? 'https://netflix.com/activate?token=DEMO827361' : 'TV CODE: 729-194';
+        
+        orders.unshift({
+          name: name,
+          date: new Date().toISOString().split('T')[0],
+          data: mockCode
+        });
+        localStorage.setItem('my_netflix_orders', JSON.stringify(orders));
+
+        alert("تم إرسال الطلب بنجاح، ستجد بيانات الحساب في خانة 'طلباتي'.");
+      }
+    }
+
+    // إرسال طلب الشحن
+    function submitDeposit() {
+      const tx = document.getElementById('binanceTx').value.trim();
+      if (!tx) {
+        alert("يرجى إدخال رقم العملية (TxID) أو الـ ID أولاً");
+        return;
+      }
+      if (tg) {
+        tg.sendData(JSON.stringify({ action: "deposit", tx_id: tx }));
+      }
+      alert("تم إرسال الطلب للمشرف للتأكد وشحن الرصيد.");
+      document.getElementById('binanceTx').value = '';
+    }
+
+    // نسخ معرف بينانس
+    function copyId() {
+      navigator.clipboard.writeText("82937104");
+      alert("تم نسخ Binance ID بنجاح: 82937104");
+    }
+
+    // رابط الدعم الفني
+    function contactDev() {
+      const devUsername = "your_username"; // استبدله بيوزرك
+      if (tg) {
+        tg.openTelegramLink(`https://t.me/${devUsername}`);
+      } else {
+        window.open(`https://t.me/${devUsername}`, '_blank');
+      }
+    }
+  </script>
+</body>
+</html>
