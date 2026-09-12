@@ -22,7 +22,7 @@
       overflow-x: hidden;
     }
 
-    /* أنيميشن دخول نتفلكس السينمائي الواقعي */
+    /* أنيميشن دخول نتفلكس بحرف N */
     #splash-screen {
       position: fixed;
       inset: 0;
@@ -50,12 +50,7 @@
       height: 100%;
       filter: drop-shadow(0 0 35px rgba(229, 9, 20, 0.85));
     }
-    .n-bar-left {
-      fill: #b1060f;
-    }
-    .n-bar-right {
-      fill: #b1060f;
-    }
+    .n-bar-left, .n-bar-right { fill: #b1060f; }
     .n-bar-center {
       fill: #e50914;
       filter: drop-shadow(0 0 15px rgba(229, 9, 20, 0.9));
@@ -241,9 +236,7 @@
       align-items: center;
       padding: 16px;
     }
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
     .modal-box {
       background: #161616;
       border: 1px solid #333;
@@ -262,11 +255,7 @@
       padding-bottom: 10px;
       margin-bottom: 14px;
     }
-    .close-btn {
-      font-size: 22px;
-      color: #aaa;
-      cursor: pointer;
-    }
+    .close-btn { font-size: 22px; color: #aaa; cursor: pointer; }
     .guide-step {
       background: #101010;
       border-right: 3px solid #e50914;
@@ -316,7 +305,7 @@
       font-size: 14px;
     }
 
-    /* الطلبات */
+    /* الطلبات المشتراة */
     .order-item {
       background: #141414;
       border: 1px solid #262626;
@@ -324,17 +313,29 @@
       padding: 14px;
       margin-bottom: 12px;
     }
-    .order-code {
+    .order-code-box {
       background: #000;
       border: 1px dashed #333;
       padding: 10px;
       border-radius: 6px;
-      font-size: 13px;
+      font-size: 11px;
       color: #4cd964;
       direction: ltr;
-      text-align: center;
+      text-align: left;
       margin-top: 8px;
       word-break: break-all;
+    }
+    .btn-open-link {
+      display: block;
+      background: #e50914;
+      color: white;
+      text-align: center;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      margin-top: 8px;
     }
 
     /* الشريط السفلي */
@@ -372,10 +373,10 @@
 </head>
 <body>
 
-  <!-- شاشة الدخول السينمائية لحرف N لنتفلكس -->
+  <!-- أنيميشن البداية N -->
   <div id="splash-screen">
     <div class="netflix-cinematic-wrap">
-      <svg class="n-svg" viewBox="0 0 111 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="n-svg" viewBox="0 0 111 200" fill="none">
         <path class="n-bar-left" d="M0 0H37.037V200H0V0Z"/>
         <path class="n-bar-right" d="M74.074 0H111.111V200H74.074V0Z"/>
         <path class="n-bar-center" d="M0 0L74.074 200H111.111L37.037 0H0Z"/>
@@ -392,7 +393,7 @@
 
   <div class="container">
 
-    <!-- 1. الرئيسية: الحسابات فقط -->
+    <!-- 1. الرئيسية: الحسابات المتوفرة -->
     <div id="tab-home" class="tab-content active">
       <div class="banner">
         <h3>متجر نتفلكس - تسليم فوري وتلقائي 🍿</h3>
@@ -475,7 +476,7 @@
       <div id="ordersContainer"></div>
     </div>
 
-    <!-- 5. الدعم -->
+    <!-- 5. الدعم الفني -->
     <div id="tab-support" class="tab-content">
       <div style="text-align: center; padding: 30px 16px; background: #141414; border-radius: 12px; border: 1px solid #222;">
         <div style="font-size:42px; margin-bottom:12px;">👨‍💻</div>
@@ -489,7 +490,7 @@
 
   </div>
 
-  <!-- نافذة الشرح فقط (عند ضغط ☰) -->
+  <!-- نافذة الشرح المخصصة للتعليمات فقط عند الضغط على ☰ -->
   <div class="modal-overlay" id="guideModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -504,12 +505,12 @@
 
       <div class="guide-step">
         <strong>2. إتمام الشراء:</strong>
-        بعد تفعيل الرصيد، ارجع للرئيسية واضغط على زر "شراء الآن" للحساب المطلوب (رابط تفعيل أو كود تلفاز TV).
+        بعد تفعيل الرصيد المجاني، ارجع للرئيسية واضغط على زر "شراء الآن" للحساب المطلوب (رابط تفعيل أو كود تلفاز TV).
       </div>
 
       <div class="guide-step">
         <strong>3. استلام الحساب:</strong>
-        فور تأكيد الشراء، توجه مباشرة إلى خانة <b>"طلباتي"</b> في الشريط السفلي وستجد رابط الحساب أو كود التلفاز جاهزاً فوراً.
+        فور تأكيد الشراء، توجه مباشرة إلى خانة <b>"طلباتي"</b> في الشريط السفلي وستجد رابط الحساب أو كود التلفاز جاهزاً فوراً مع زر فتح مباشر.
       </div>
 
       <div class="guide-step">
@@ -549,7 +550,29 @@
       try { tg.ready(); tg.expand(); } catch (e) {}
     }
 
-    // إخفاء شاشة البداية الاحترافية
+    // مصفوفة الحسابات الجاهزة المرسلة منك
+    const ALL_NETFLIX_LINKS = [
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCASvx4GVq3/SqcrI7eGwaDmRBUljlvwcsQEFM95H29Ln8W1UmC3ojIRHpmDlU8jUz7uqJ8WFzXQZYon9gGMiprfN74GaMIGzhIIEeMPzjm20OS4zhAcUXXqjaVrF3Kd7ZO5hCFx+6DRTNLUGn+NsLj0sipujqnzgbQTmFYQMk+9QMUa2tl42xmtopc5XjBobHvT3htlsCYtdEesWdKz1/5ZsDWwrFvPya5VXBxvUr/P6p/LQ+6MGCoDuaSkpe0PpfukwSGAYiDgoMer+cl1kP+tg7Slda",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAWy/1qMaU1LSKr/SdsEuZtX5bXbFlKzdhr7NtREGNl63UQandSMAzxub3tyVUslVxLftM+pfgrHzNL4AbNaY691emZzGZ33+Ja4gacD94cQQk7cS6iLg29A/WupoWIk+9v6df6DOefgsdCBSDOIP3YG+LEveh9wDEtYV0lHUWxAtfJUGs5Sad4vTmxP29tnOxYvNMYHpriNcbp7aUJlNYZ6r50Ub4NC7Cv2WuZDey6cCvz2j/Zj/jRiV+i33tnNcMMOyGAYiDgoMbqKJvQ6qE5b/LYdE",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLDAYiKguRVRyJcJ6WA84+9AnlicUM/oIR5RuRQZT1W1me0Mv76UT/jPkSz4VZHFjhM2F69DEnYXMadNTbBW8MoIiONg6bXRMLNm/JhHnRbfAcHSMGg69KhZC84AQuK9zUww9a3ZuNWY/5NoFxTPdUNwPGTIMkQZjpmusrLKDchertlc9RC6BAKUl4ti0ADlvdVcy18ohRKn76FZ0fW6pvHFcHOtvkeEwryUoSkFpdzLn/UPyDCvIo3/gb9SJZeVjZ/EX1tjhgGIg4KDBco8WkAx50tRj4IvQ==",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAZBwiEz/2oHicNoPek8+gq2/B/hHMSSd6RJ//SlzcoMpe5Kk5Nhc3rNQpYpHh/sZbHLOQgxrILgQk6ZUHh49j8dg0zCagEKlzgBH8pf6jJrNZMpPADwKM02rshMvWXVbGSbFf4uE//FP4/NR3XlRiNXoy4mwnelzQPTbl8GrHchtYt/jBybGGblfoig+8M9dYNPVV1kd8uINA7t6dKTUmUas1VjbjAoOOeImQrSKlH7N5QPxH6/wePEL2R8M61fyjf1IGAYiDgoMdljnyHy7OO04VDMl",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCATINIQMbcImJYiKzg0YltgwGJI+L3cOKiZmYKj4FklipV7oafSEBHcgDUjUyDnAf1RnUolwc1WKqFNuIqMqrepK6idKZUMt9DRLzR2SO9/78XgjJ4ntSZEq1uLfENSGaSNQm+oXnYuWR6IdQ9tRYzh3AVnOKr2seop4fAE/tomY0pN4LtTtL/7FbQLBNSeFGrRaL6KE+w+fMhUi2gy544lihC9k7Zweu/BkCnNYRnTFfoRlehtGbhDyur8cyTckhfTQvGAYiDgoMv4kKsKg1rjkrUc+7",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAarimJb3pSckqXPMjUCPr4WlTFg6HhRimCIQRKfzJGaJ5UvlXyjS0Hg+LFETYTzVRqpRiRHHmPIAUmQXG8CVSM2dzkzEH15erNGguSxhCbJLfGYQlIWGrh1RnAsSyWhig9Jr2HEJbBT426VE8Mz93CiHoiMohY3hLSPXyQ4umxAUyOAtbpOD40rRNdCX6O5ta/BX9b7xytUMQ+J70cGPZkJFf9GgefW8QzLOpeKASUpXwysqJMWj8A8zH4I0+OOkbh+FGAYiDgoMHX3b8/cOoVX6bGrz",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAUhNhM8yoxXR5ztL4BJdfdG4p3GV3QOrEjKq2XlwoFjHezpd6euDd+dy2bb847xDIodp1ebRRKBA2ob79GOrKvYRjvwln2kZ4GJvmDhJOBKbvYFMBeHLmiMLi1IjvbfeOUuEbTB5Pj/U3e0XsUPV/oAQWl+lz0iCls0cc9UqhOT878Hhsl28EbC29tfw2ofaHXRBE+QONAPv09mie25ahxcgTATPBfl/Z/rHZczeKV3vT24y5T6ycaa0XY1jVoYoJYfvGAYiDgoM5EByBJDNi59cQ0Vg",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAZcHqWFfX6pusI28HTd4omM/siBLMbBqbgGQ0xEGjqiidvc4wkHmvJiOiYU87ZpNHWaUto8P3psqww/1Ls1Aq4C0uKQnOsrSqfgCD0F/6UwAUqLmSMXYO1GEihfIld8VdFKSq0Ior2nO0oURI7OtXniGxoUtNv/rTeybNR10rMhf4uVgEFgoaXQ+luonw0zk6j18Tyx2qlHrALYXm4xq3P5JkjwPdRtm7YKhKdgz9lpnaeFZAfYv2Htiqq5KFEUE4VAPGAYiDgoMaO/jPYBOF0+zBb+t",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAZPmOpBqQNHRQZ8DJQkVscDKSLMA1oB6KcYJJGnfv9Wonn4UU74vAPaHviShhE6bgP7AjCa5BFo002Fw9BdLZoOIn6WZkD3j7y+V2OApPYTRnLNtduTvz8woyC8qw1TyVN7lkF1gmMIme7oihpvvmEgN32AQYc6Kgd1koMDXyAxC6yC3hu5skHggSnUne1cYAC7siG7+bw+x8HlTBNPWC/uuKcwXrwNklWMCDIvARJTQB0tgWIFh0WKhbWncriNElecXGAYiDgoMGFW0eKYk2tuXJ96F",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAavktPAPGd8cX92RWR1Dh3Di4+zbcwLwxi2Pfy/8b4y8pXSMFFw4FzLT8UkqN5VDK8iTxZWMykiLpcRQe4WP/6IrTqkSas4L1eZXYhYOPhmSS+ZlEcr7Im6zZTBb0xFbVoAPwhuMMmtqVxMWeB+PBsMRcikMxEkzfVaGpDUKb10+N6XcpEPrdjopa/ncbpO5/qiVAuEFME82imH2B1JTVnlWvyzF8uhcNIsfCH6rxaZLsZK3B9Al3MKrcwlj5Vjqtgp4GAYiDgoMp0x26t9Qzr6FQfb+",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCARNp3a1AflY41kChN2a/DeXW/nK/CzBOrSwfdr3R7BnHPK0e7CqRcik5TP1XewU+uW0YSUqRNR/+Ylm0aetUvQ0BGxqBaUiyUIv6FA09jlsG3+4KktLAXhEj1ORlI0KmKXyDRcmWNOdXGdJqOPpf/t1/6sBN19LBTGhP0NRIaL2i/GCXvP2FTQ7xtj1dP+1p7h/umPpIdIlEEUCYjd2O1yD6S1TPmQKrWbuWjnDr5essRTUsAJ0FVZa2/jwoTruaRE+rGAYiDgoM3k19FhOZZJxCc7mn",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAbIEBOyOojPzDK1PvUjV2g4TuVrlyksVlNUdC12XrY4+y0S4lz3mxTP+OtTkyzUR84rjtf+SQB2vuJYucygjycbhnVxOKK2/VgwkE1fBCwcxAB5DNygf3oviEQe1opuUvQzva/KmEHhN6YxG1YzDOCMFStT9SJ4Ah07PT0eUt5pbs7qKMbiQL0GjvCI3NbzAPmtTFVPTBIexy4EwuqzvX6YfVXtemMKh6KFCbYI8lXYVj7XkNBiKCo0zHe3I1YbMHdtPGAYiDgoMEhc2txGbxYjndFr3",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCATcPb1S5jJ6kS3Ud5g0LrB/C51VEOLYSFDnFrPIHGhgfL7je9X0XmCfjUhOqoenXAYKun9BD49UEN4yMvbyhTXEOOWxrAljUz3Aq57C+0bKhlt3BVlz09xZl4rCiba/f2/oaAUikXwPlpUREklqemyQfphmvLTQTagvq3/MEiBO3Kln2wrsq7y4piucGFegkXyHV5EwDN8PbTsAt1uxxDTCNYo9b8C4Wv310zJdH1kTZ/uA4hQdiDNGpc7Nx4m3eM0KCGAYiDgoMeVfu4RMDs9141gm5",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAd3iZRek4NSYVx/K9U6mrWAhILkSh0SvTXshrb4/6TXoW9ih12oUM7gGYGdqWx+rbToUM4XOVBsRu9qZ4xCnoA0rl81GZdxm5/CyZnPYcuOuK4GVM5C2BheGt+5RtgUI9gVP7eOqr8h/YYjMFchYlKAsk+nDI3Ivr3RWbw2VKjgclMU54lfuWTEGhQSxusEyMpwuJEqlX8tbcZ4/AyiuawLfTp0Yq/Ok8oHUAyL66SgoESDW8PJ4uuKJyu5JYXnVFj0NGAYiDgoMc3qnRA3fcxpM/Uqc",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAaiSjGDuG+GsZ18RZIyN6T18RzNUdNfG7A9g6bB0yZHFypi2j9VLCGtSPOCjKZJcRpr2NJmezavgtXrpTwxcwCE3hI8e795TnhZXVtEuAbPUXywpPo/yzVGISuP0x8N1C7Phe2h2z2LEwaQdXebj7NdZFaZtW8LeyUDf7im7YlaKgXoZi0yRxDeChIkK65HdLXMQzSEVXu+vqaehZFj7auLZEUIfDVQ4bo3hOPN50E1m5lFeoKfteR85Ret4hc8tWuZeGAYiDgoMMnMek+ejKPLIlKto",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAa5Gce67kwqbReWW477zIa44uzKCPy6sqJLHlhx1MtwtozlPETwDJVmyM454mGXFRX5NYeD0WSVaEoNvJsik82HumYXC5cadn6m3XESyPamwEVI39vAQmsltR2YK8QP6dVzPNqV6itpClFmloJ1V7XWjPC8aH96w/J6/W12AjlopGIplVJxkGzGAu36zm1t/5AZ/BCIMxAX5glHr8nL99MBiBqyXN2vpOqcmaOEDR7/gu4GdIxRSJWts9fEZBO0mLZoCGAYiDgoM+GSNrTnEWv/yGzEs",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAXYx8pJpM0d9VbekTm8t3C2kVzuXh3PPk9Id61qiMbbZZvrfLWStEp1E7l7Otih6878hrWaEMBPRgTeU0eDBxPTV/3D+FFSseC7X6yhTYvy8Lp4c0U+g8O6cn+HOV1IPzOqnGnjSoyb5PoMvB5u+QLL3C+YvYwkRiIKajD100pHgWC58KMa5+X/gPvBx71gOdq9eSFQl7QfngThkANFUSS+wb63RihO9rM5M8DM+pvjVrcqCuvksHoEeeGxczzogb2zrGAYiDgoM0mwhspjPvt+LD84D",
+      "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAQbxoDeqhjKapatEntznQRL96ChjNuuZ4fKSI3EuveL76j2vkptW0H66zH8IdjfYEz58RorxEDSUwy7lXJ9aftZQB+/IPF2I++tqwcSZZTVaYOh+9AgzwZxlBiBoSqvyWyH6A5BzuU0bckcqaercUx8udfWYBU8+NKkY75WIx+CvWeTPdClzzFpTq+hiOfnQT8yIfNj9tAvFiKq+b8KNC2lYt4++JV9j66hT+PvbMj2EkEcFZC8hDEZ9i3v78uaADAgWGAYiDgoMm2YVtd50ud/livjA"
+    ];
+
+    // إخفاء شاشة البداية
     window.addEventListener('load', () => {
       setTimeout(() => {
         const splash = document.getElementById('splash-screen');
@@ -574,15 +597,11 @@
       if (badge) badge.innerText = `رصيدك: $${getBal().toFixed(2)}`;
     }
 
-    // إدارة نافذة الشرح
-    function openGuideModal() {
-      document.getElementById('guideModal').classList.add('active');
-    }
-    function closeGuideModal() {
-      document.getElementById('guideModal').classList.remove('active');
-    }
+    // نافذة الشرح
+    function openGuideModal() { document.getElementById('guideModal').classList.add('active'); }
+    function closeGuideModal() { document.getElementById('guideModal').classList.remove('active'); }
 
-    // تسجيل الضغط على القنوات
+    // متابعة إتمام المهام
     let ch1 = false, ch2 = false;
     function recordTaskClick(n) {
       if (n === 1) ch1 = true;
@@ -600,7 +619,7 @@
       }
       setBal(getBal() + 0.50);
       localStorage.setItem('tasks_claimed_status', 'true');
-      alert("تم التحقق بنجاح وإضافة 0.50$ إلى رصيدك! توجه للرئيسية لاختيار حسابك مجاناً.");
+      alert("تهانينا! تم التحقق بنجاح وإضافة 0.50$ إلى رصيدك. توجه للرئيسية لشراء الحساب فوراً.");
       switchTab('home', document.getElementById('nav-home'));
     }
 
@@ -616,7 +635,20 @@
       if (tabId === 'orders') renderOrders();
     }
 
-    // إتمام الشراء
+    // دالة تسليم الحساب وسحبه من الروابط
+    function getNextAvailableLink() {
+      const usedIndexes = JSON.parse(localStorage.getItem('used_link_indexes') || '[]');
+      for (let i = 0; i < ALL_NETFLIX_LINKS.length; i++) {
+        if (!usedIndexes.includes(i)) {
+          usedIndexes.push(i);
+          localStorage.setItem('used_link_indexes', JSON.stringify(usedIndexes));
+          return ALL_NETFLIX_LINKS[i];
+        }
+      }
+      return null;
+    }
+
+    // عملية الشراء
     function purchase(name, price) {
       const current = getBal();
       if (current < price) {
@@ -624,22 +656,30 @@
         return;
       }
 
+      let deliveredData = "";
+      if (name.includes('رابط')) {
+        const link = getNextAvailableLink();
+        if (!link) {
+          alert("عذراً، نفد مخزون حسابات الروابط المتاحة حالياً! يرجى التواصل مع الدعم الفني.");
+          return;
+        }
+        deliveredData = link;
+      } else {
+        deliveredData = 'TV CODE: ' + Math.floor(100 + Math.random() * 900) + '-' + Math.floor(100 + Math.random() * 900);
+      }
+
       if (confirm(`تأكيد شراء حساب نتفلكس (${name}) بقيمة $${price.toFixed(2)}؟`)) {
         setBal(current - price);
 
         const orders = JSON.parse(localStorage.getItem('orders_store') || '[]');
-        const code = name.includes('رابط')
-          ? 'https://netflix.com/activate?token=NF-' + Math.floor(100000 + Math.random() * 900000)
-          : 'TV CODE: ' + Math.floor(100 + Math.random() * 900) + '-' + Math.floor(100 + Math.random() * 900);
-
         orders.unshift({
           name: name,
           date: new Date().toLocaleDateString('ar-EG'),
-          code: code
+          code: deliveredData
         });
         localStorage.setItem('orders_store', JSON.stringify(orders));
 
-        alert("تم الشراء بنجاح! توجه إلى تبويب 'طلباتي' لاستلام بيانات الحساب.");
+        alert("تمت عملية الشراء بنجاح! انتقل إلى تبويب 'طلباتي' لاستلام الحساب واستخدامه فوراً.");
       }
     }
 
@@ -654,16 +694,20 @@
         return;
       }
 
-      container.innerHTML = orders.map(o => `
-        <div class="order-item">
-          <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:700;">
-            <span>حساب نتفلكس (${o.name})</span>
-            <span style="color:#4cd964;">نشط</span>
+      container.innerHTML = orders.map(o => {
+        const isUrl = o.code.startsWith('http');
+        return `
+          <div class="order-item">
+            <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:700;">
+              <span>حساب نتفلكس (${o.name})</span>
+              <span style="color:#4cd964;">نشط ومفعل</span>
+            </div>
+            <div style="font-size:11px; color:#777; margin-top:3px;">تاريخ الشراء: ${o.date}</div>
+            <div class="order-code-box">${o.code}</div>
+            ${isUrl ? `<a href="${o.code}" target="_blank" class="btn-open-link">فتح الحساب مباشرة وتفعيله 🚀</a>` : ''}
           </div>
-          <div style="font-size:11px; color:#777; margin-top:3px;">تاريخ الشراء: ${o.date}</div>
-          <div class="order-code">${o.code}</div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     // نسخ معرف بينانس
@@ -695,4 +739,3 @@
   </script>
 </body>
 </html>
-
