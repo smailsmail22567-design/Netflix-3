@@ -154,13 +154,14 @@
       gap: 6px;
     }
 
-    /* بطاقات العروض */
+    /* بطاقات العروض مع عداد المخزون */
     .card {
       background: #141414;
       border: 1px solid #262626;
       border-radius: 12px;
       padding: 16px;
       margin-bottom: 14px;
+      position: relative;
     }
     .card-header {
       display: flex;
@@ -175,6 +176,17 @@
       margin-top: 4px;
       direction: ltr;
       text-align: right;
+    }
+    .stock-tag {
+      display: inline-block;
+      margin-top: 6px;
+      background: #1e1e1e;
+      border: 1px solid #333;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #4cd964;
     }
     .card-icon {
       width: 42px;
@@ -393,7 +405,7 @@
 
   <div class="container">
 
-    <!-- 1. الرئيسية: الحسابات المتوفرة -->
+    <!-- 1. الرئيسية مع إظهار عدد الحسابات المتوفرة -->
     <div id="tab-home" class="tab-content active">
       <div class="banner">
         <h3>متجر نتفلكس - تسليم فوري وتلقائي 🍿</h3>
@@ -402,22 +414,26 @@
 
       <div class="section-title">⚡ باقات الحسابات المتوفرة</div>
 
+      <!-- بطاقة حساب الهاتف (رابط) -->
       <div class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">حساب نتفلكس (رابط تفعيل)</div>
+            <div class="card-title">حساب نتفلكس (هاتف / رابط تفعيل)</div>
             <div class="card-price">$0.50</div>
+            <div class="stock-tag" id="phoneStockBadge">المتوفر: جاري التحقق...</div>
           </div>
-          <div class="card-icon">🔗</div>
+          <div class="card-icon">📱</div>
         </div>
         <button class="btn-action" onclick="purchase('رابط تفعيل', 0.50)">شراء الآن</button>
       </div>
 
+      <!-- بطاقة حساب التلفاز -->
       <div class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">حساب نتفلكس (تلفاز TV)</div>
+            <div class="card-title">حساب نتفلكس (شاشة تلفاز TV)</div>
             <div class="card-price">$0.50</div>
+            <div class="stock-tag" id="tvStockBadge">المتوفر: جاري التحقق...</div>
           </div>
           <div class="card-icon">📺</div>
         </div>
@@ -550,7 +566,7 @@
       try { tg.ready(); tg.expand(); } catch (e) {}
     }
 
-    // مصفوفة الحسابات الجاهزة المرسلة منك
+    // مصفوفة حسابات الهاتف (الروابط)
     const ALL_NETFLIX_LINKS = [
       "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCASvx4GVq3/SqcrI7eGwaDmRBUljlvwcsQEFM95H29Ln8W1UmC3ojIRHpmDlU8jUz7uqJ8WFzXQZYon9gGMiprfN74GaMIGzhIIEeMPzjm20OS4zhAcUXXqjaVrF3Kd7ZO5hCFx+6DRTNLUGn+NsLj0sipujqnzgbQTmFYQMk+9QMUa2tl42xmtopc5XjBobHvT3htlsCYtdEesWdKz1/5ZsDWwrFvPya5VXBxvUr/P6p/LQ+6MGCoDuaSkpe0PpfukwSGAYiDgoMer+cl1kP+tg7Slda",
       "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAWy/1qMaU1LSKr/SdsEuZtX5bXbFlKzdhr7NtREGNl63UQandSMAzxub3tyVUslVxLftM+pfgrHzNL4AbNaY691emZzGZ33+Ja4gacD94cQQk7cS6iLg29A/WupoWIk+9v6df6DOefgsdCBSDOIP3YG+LEveh9wDEtYV0lHUWxAtfJUGs5Sad4vTmxP29tnOxYvNMYHpriNcbp7aUJlNYZ6r50Ub4NC7Cv2WuZDey6cCvz2j/Zj/jRiV+i33tnNcMMOyGAYiDgoMbqKJvQ6qE5b/LYdE",
@@ -572,6 +588,42 @@
       "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAQbxoDeqhjKapatEntznQRL96ChjNuuZ4fKSI3EuveL76j2vkptW0H66zH8IdjfYEz58RorxEDSUwy7lXJ9aftZQB+/IPF2I++tqwcSZZTVaYOh+9AgzwZxlBiBoSqvyWyH6A5BzuU0bckcqaercUx8udfWYBU8+NKkY75WIx+CvWeTPdClzzFpTq+hiOfnQT8yIfNj9tAvFiKq+b8KNC2lYt4++JV9j66hT+PvbMj2EkEcFZC8hDEZ9i3v78uaADAgWGAYiDgoMm2YVtd50ud/livjA"
     ];
 
+    // إجمالي رصيد أكواد شاشات التلفاز المتاحة (يمكنك تغييره متى شئت)
+    const INITIAL_TV_STOCK = 15;
+
+    // تحديث وتجهيز عداد المخزون على الشاشة
+    function updateStockDisplay() {
+      const usedIndexes = JSON.parse(localStorage.getItem('used_link_indexes') || '[]');
+      const remainingLinks = ALL_NETFLIX_LINKS.length - usedIndexes.length;
+
+      const tvSold = parseInt(localStorage.getItem('tv_sold_count') || '0');
+      const remainingTv = Math.max(0, INITIAL_TV_STOCK - tvSold);
+
+      // تحديث شارة حساب الهاتف
+      const phoneBadge = document.getElementById('phoneStockBadge');
+      if (phoneBadge) {
+        if (remainingLinks > 0) {
+          phoneBadge.innerText = `المتوفر: ${remainingLinks} حساب`;
+          phoneBadge.style.color = "#4cd964";
+        } else {
+          phoneBadge.innerText = `نفد المخزون ❌`;
+          phoneBadge.style.color = "#e50914";
+        }
+      }
+
+      // تحديث شارة حساب التلفاز
+      const tvBadge = document.getElementById('tvStockBadge');
+      if (tvBadge) {
+        if (remainingTv > 0) {
+          tvBadge.innerText = `المتوفر: ${remainingTv} كود`;
+          tvBadge.style.color = "#4cd964";
+        } else {
+          tvBadge.innerText = `نفد المخزون ❌`;
+          tvBadge.style.color = "#e50914";
+        }
+      }
+    }
+
     // إخفاء شاشة البداية
     window.addEventListener('load', () => {
       setTimeout(() => {
@@ -582,6 +634,7 @@
         }
       }, 2600);
       updateBalance();
+      updateStockDisplay();
     });
 
     // إدارة الرصيد
@@ -660,11 +713,17 @@
       if (name.includes('رابط')) {
         const link = getNextAvailableLink();
         if (!link) {
-          alert("عذراً، نفد مخزون حسابات الروابط المتاحة حالياً! يرجى التواصل مع الدعم الفني.");
+          alert("عذراً، نفد مخزون حسابات الهاتف المتاحة حالياً! يرجى التواصل مع الدعم الفني.");
           return;
         }
         deliveredData = link;
       } else {
+        const tvSold = parseInt(localStorage.getItem('tv_sold_count') || '0');
+        if (tvSold >= INITIAL_TV_STOCK) {
+          alert("عذراً، نفد مخزون أكواد التلفاز المتاحة حالياً! يرجى التواصل مع الدعم الفني.");
+          return;
+        }
+        localStorage.setItem('tv_sold_count', (tvSold + 1).toString());
         deliveredData = 'TV CODE: ' + Math.floor(100 + Math.random() * 900) + '-' + Math.floor(100 + Math.random() * 900);
       }
 
@@ -679,6 +738,7 @@
         });
         localStorage.setItem('orders_store', JSON.stringify(orders));
 
+        updateStockDisplay();
         alert("تمت عملية الشراء بنجاح! انتقل إلى تبويب 'طلباتي' لاستلام الحساب واستخدامه فوراً.");
       }
     }
@@ -739,3 +799,4 @@
   </script>
 </body>
 </html>
+
