@@ -57,30 +57,11 @@
     }
 
     @keyframes netflixCinematicZoom {
-      0% {
-        transform: scale(0.3) translateZ(-200px);
-        opacity: 0;
-        filter: brightness(0.2) blur(4px);
-      }
-      25% {
-        transform: scale(1) translateZ(0);
-        opacity: 1;
-        filter: brightness(1) blur(0px);
-      }
-      65% {
-        transform: scale(1.18) translateZ(40px);
-        opacity: 1;
-        filter: brightness(1.3) drop-shadow(0 0 45px rgba(229, 9, 20, 1));
-      }
-      85% {
-        transform: scale(2.8) translateZ(180px);
-        opacity: 0.8;
-      }
-      100% {
-        transform: scale(6.5) translateZ(350px);
-        opacity: 0;
-        filter: brightness(2) blur(8px);
-      }
+      0% { transform: scale(0.3) translateZ(-200px); opacity: 0; filter: brightness(0.2) blur(4px); }
+      25% { transform: scale(1) translateZ(0); opacity: 1; filter: brightness(1) blur(0px); }
+      65% { transform: scale(1.18) translateZ(40px); opacity: 1; filter: brightness(1.3) drop-shadow(0 0 45px rgba(229, 9, 20, 1)); }
+      85% { transform: scale(2.8) translateZ(180px); opacity: 0.8; }
+      100% { transform: scale(6.5) translateZ(350px); opacity: 0; filter: brightness(2) blur(8px); }
     }
 
     /* الشريط العلوي */
@@ -154,7 +135,7 @@
       gap: 6px;
     }
 
-    /* بطاقات العروض مع شارة العدد بجانب العنوان */
+    /* بطاقات العروض */
     .card {
       background: #141414;
       border: 1px solid #262626;
@@ -254,6 +235,22 @@
       border-radius: 8px;
       font-size: 13px;
       font-weight: 700;
+    }
+    .btn-claim {
+      background: #f39c12;
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btn-claim:active { background: #d68910; }
+    .btn-claim.disabled {
+      background: #2a2a2a;
+      color: #777;
+      cursor: not-allowed;
     }
 
     /* نافذة الشرح المخصصة للتعليمات فقط */
@@ -465,14 +462,25 @@
       </div>
     </div>
 
-    <!-- 2. خانة المهام -->
+    <!-- 2. خانة المهام والمكافآت -->
     <div id="tab-tasks" class="tab-content">
       <div class="banner">
         <h3>مهام جمع الرصيد المجاني 🎁</h3>
-        <p>انضم للقناتين واضغط تحقق لتحصل على 0.50$ فوراً في رصيدك لشراء الحساب مجاناً!</p>
+        <p>اجمع رصيدك يومياً ومجاناً لشراء حساباتك المفضلة!</p>
       </div>
 
-      <div class="section-title">📢 القنوات المطلوبة</div>
+      <!-- المكافأة اليومية (مرتين كل 24 ساعة وفارق 60 ثانية) -->
+      <div class="section-title">⏱️ الهدية اليومية (مرتين يومياً)</div>
+      <div class="task-card">
+        <div>
+          <div class="task-title" id="dailyTaskTitle">هدية يومية (+0.11$)</div>
+          <div class="task-reward" id="dailyTaskStatus">جاهزة للاستلام (1/2)</div>
+        </div>
+        <button class="btn-claim" id="dailyClaimBtn" onclick="claimDailyReward()">أخذ (0.11$)</button>
+      </div>
+
+      <!-- مهام القنوات الدائمة -->
+      <div class="section-title" style="margin-top: 20px;">📢 مهام الاشتراك بالقنوات</div>
 
       <div class="task-card">
         <div>
@@ -491,7 +499,7 @@
       </div>
 
       <button class="btn-action" style="background:#4cd964; color:#000; font-size:15px; margin-top:10px;" onclick="verifyAndReward()">
-        تحقق وتفعيل الرصيد (0.50$) ✅
+        تحقق وتفعيل رصيد القنوات (0.50$) ✅
       </button>
     </div>
 
@@ -516,13 +524,14 @@
       <div id="ordersContainer"></div>
     </div>
 
-    <!-- 5. الدعم الفني -->
+    <!-- 5. الدعم الفني المحدث بيوزرك @J_vv_5 -->
     <div id="tab-support" class="tab-content">
       <div style="text-align: center; padding: 30px 16px; background: #141414; border-radius: 12px; border: 1px solid #222;">
         <div style="font-size:42px; margin-bottom:12px;">👨‍💻</div>
         <h3 style="font-size:17px; margin-bottom:8px;">الدعم الفني المباشر</h3>
         <p style="font-size:12px; color:#aaa; margin-bottom:20px; line-height:1.6;">
-          تواصل مع المطور في حال واجهتك أي مشكلة أو كان لديك استفسار بخصوص الحسابات والشحن
+          تواصل مع المطور في حال واجهتك أي مشكلة أو كان لديك استفسار بخصوص الحسابات والشحن: <br>
+          <b style="color:#e50914; font-size:14px; direction:ltr; display:inline-block; margin-top:4px;">@J_vv_5</b>
         </p>
         <button class="btn-action" style="background:#229ED9;" onclick="contactDev()">مراسلة المطور عبر تليجرام</button>
       </div>
@@ -540,7 +549,7 @@
 
       <div class="guide-step">
         <strong>1. جمع الرصيد المجاني ($0.50):</strong>
-        سعر الحساب موحد ($0.50). يمكنك الحصول عليه مجاناً بالذهاب إلى خانة <b>"المهام"</b> في الشريط بالأسفل، والانضمام للقناتين والضغط على زر التحقق.
+        سعر الحساب موحد ($0.50). يمكنك الحصول عليه مجاناً بالذهاب إلى خانة <b>"المهام"</b> بالأسفل، والاشتراك بالقنوات وأخذ الهدية اليومية المتكررة (0.11$).
       </div>
 
       <div class="guide-step">
@@ -590,7 +599,7 @@
       try { tg.ready(); tg.expand(); } catch (e) {}
     }
 
-    // مصفوفة حسابات الهاتف (الروابط) الحقيقية المتبقية
+    // مصفوفة حسابات الهاتف (الروابط)
     const ALL_NETFLIX_LINKS = [
       "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCASvx4GVq3/SqcrI7eGwaDmRBUljlvwcsQEFM95H29Ln8W1UmC3ojIRHpmDlU8jUz7uqJ8WFzXQZYon9gGMiprfN74GaMIGzhIIEeMPzjm20OS4zhAcUXXqjaVrF3Kd7ZO5hCFx+6DRTNLUGn+NsLj0sipujqnzgbQTmFYQMk+9QMUa2tl42xmtopc5XjBobHvT3htlsCYtdEesWdKz1/5ZsDWwrFvPya5VXBxvUr/P6p/LQ+6MGCoDuaSkpe0PpfukwSGAYiDgoMer+cl1kP+tg7Slda",
       "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAWy/1qMaU1LSKr/SdsEuZtX5bXbFlKzdhr7NtREGNl63UQandSMAzxub3tyVUslVxLftM+pfgrHzNL4AbNaY691emZzGZ33+Ja4gacD94cQQk7cS6iLg29A/WupoWIk+9v6df6DOefgsdCBSDOIP3YG+LEveh9wDEtYV0lHUWxAtfJUGs5Sad4vTmxP29tnOxYvNMYHpriNcbp7aUJlNYZ6r50Ub4NC7Cv2WuZDey6cCvz2j/Zj/jRiV+i33tnNcMMOyGAYiDgoMbqKJvQ6qE5b/LYdE",
@@ -612,10 +621,7 @@
       "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAQbxoDeqhjKapatEntznQRL96ChjNuuZ4fKSI3EuveL76j2vkptW0H66zH8IdjfYEz58RorxEDSUwy7lXJ9aftZQB+/IPF2I++tqwcSZZTVaYOh+9AgzwZxlBiBoSqvyWyH6A5BzuU0bckcqaercUx8udfWYBU8+NKkY75WIx+CvWeTPdClzzFpTq+hiOfnQT8yIfNj9tAvFiKq+b8KNC2lYt4++JV9j66hT+PvbMj2EkEcFZC8hDEZ9i3v78uaADAgWGAYiDgoMm2YVtd50ud/livjA"
     ];
 
-    // حسابات التلفاز صفر (غير متوفرة حالياً)
-    const INITIAL_TV_STOCK = 0;
-
-    // تحديث شارات المخزون مباشرة بجانب الاسم
+    // تحديث شارات المخزون
     function updateStockDisplay() {
       const usedIndexes = JSON.parse(localStorage.getItem('used_link_indexes') || '[]');
       const remainingLinks = ALL_NETFLIX_LINKS.length - usedIndexes.length;
@@ -657,6 +663,7 @@
       }, 2600);
       updateBalance();
       updateStockDisplay();
+      initDailyBonusTimer();
     });
 
     // إدارة الرصيد
@@ -672,11 +679,119 @@
       if (badge) badge.innerText = `رصيدك: $${getBal().toFixed(2)}`;
     }
 
+    // إدارة المهمة اليومية (مرتان - 60 ثانية فارق - ثم 24 ساعة)
+    let dailyInterval = null;
+
+    function getDailyState() {
+      return JSON.parse(localStorage.getItem('daily_bonus_state') || JSON.stringify({
+        count: 0,
+        wait60Until: 0,
+        cooldown24Until: 0
+      }));
+    }
+
+    function saveDailyState(state) {
+      localStorage.setItem('daily_bonus_state', JSON.stringify(state));
+    }
+
+    function initDailyBonusTimer() {
+      if (dailyInterval) clearInterval(dailyInterval);
+      dailyInterval = setInterval(refreshDailyUI, 1000);
+      refreshDailyUI();
+    }
+
+    function refreshDailyUI() {
+      const state = getDailyState();
+      const now = Date.now();
+
+      const btn = document.getElementById('dailyClaimBtn');
+      const statusText = document.getElementById('dailyTaskStatus');
+      if (!btn || !statusText) return;
+
+      // هل دخل في حظر الـ 24 ساعة؟
+      if (state.cooldown24Until > now) {
+        const diff = Math.floor((state.cooldown24Until - now) / 1000);
+        const h = Math.floor(diff / 3600);
+        const m = Math.floor((diff % 3600) / 60);
+        const s = diff % 60;
+        const timeStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+        btn.className = "btn-claim disabled";
+        btn.innerText = "انتهاء";
+        statusText.innerText = `انتهت محاولات اليوم! تعود بعد: ${timeStr}`;
+        statusText.style.color = "#e50914";
+        return;
+      } else if (state.cooldown24Until > 0 && state.cooldown24Until <= now) {
+        // انتهت الـ 24 ساعة ونعيد تصفير المحاولات
+        state.count = 0;
+        state.wait60Until = 0;
+        state.cooldown24Until = 0;
+        saveDailyState(state);
+      }
+
+      // هل هو في انتظار الـ 60 ثانية بعد المرة الأولى؟
+      if (state.count === 1 && state.wait60Until > now) {
+        const remaining = Math.ceil((state.wait60Until - now) / 1000);
+        btn.className = "btn-claim disabled";
+        btn.innerText = `انتظر ${remaining}ث`;
+        statusText.innerText = `المحاولة الثانية تفتح بعد ${remaining} ثانية...`;
+        statusText.style.color = "#f39c12";
+        return;
+      }
+
+      // الحالة المتاحة للاستلام
+      if (state.count === 0) {
+        btn.className = "btn-claim";
+        btn.innerText = "أخذ (0.11$)";
+        statusText.innerText = "جاهزة للاستلام (المرة 1 من 2)";
+        statusText.style.color = "#4cd964";
+      } else if (state.count === 1) {
+        btn.className = "btn-claim";
+        btn.innerText = "أخذ (0.11$)";
+        statusText.innerText = "جاهزة للاستلام (المرة 2 من 2)";
+        statusText.style.color = "#4cd964";
+      }
+    }
+
+    function claimDailyReward() {
+      const state = getDailyState();
+      const now = Date.now();
+
+      if (state.cooldown24Until > now) {
+        alert("لقد أخذت مكافآت اليوم كاملة! يرجى الانتظار حتى انتهاء العد التنازلي.");
+        return;
+      }
+
+      if (state.count === 1 && state.wait60Until > now) {
+        alert("يرجى الانتظار حتى تنتهي الـ 60 ثانية لأخذ المحاولة الثانية!");
+        return;
+      }
+
+      if (state.count === 0) {
+        // المرة الأولى
+        setBal(getBal() + 0.11);
+        state.count = 1;
+        state.wait60Until = now + (60 * 1000); // 60 ثانية
+        saveDailyState(state);
+        alert("تهانينا! حصلت على 0.11$ بنجاح. انتظر 60 ثانية لأخذ المحاولة الثانية!");
+        refreshDailyUI();
+      } else if (state.count === 1) {
+        // المرة الثانية والأخيرة
+        setBal(getBal() + 0.11);
+        state.count = 2;
+        state.wait60Until = 0;
+        state.cooldown24Until = now + (24 * 60 * 60 * 1000); // 24 ساعة
+        saveDailyState(state);
+        alert("تهانينا! حصلت على 0.11$ (المحاولة الثانية). انتهت محاولات اليوم وسيبدأ عد تنازلي 24 ساعة.");
+        refreshDailyUI();
+      }
+    }
+
     // نافذة الشرح
     function openGuideModal() { document.getElementById('guideModal').classList.add('active'); }
     function closeGuideModal() { document.getElementById('guideModal').classList.remove('active'); }
 
-    // متابعة إتمام المهام
+    // متابعة إتمام مهام القنوات
     let ch1 = false, ch2 = false;
     function recordTaskClick(n) {
       if (n === 1) ch1 = true;
@@ -685,7 +800,7 @@
 
     function verifyAndReward() {
       if (localStorage.getItem('tasks_claimed_status') === 'true') {
-        alert("لقد استلمت المكافأة مسبقاً!");
+        alert("لقد استلمت مكافأة القنوات مسبقاً!");
         return;
       }
       if (!ch1 || !ch2) {
@@ -732,7 +847,7 @@
 
       const current = getBal();
       if (current < price) {
-        alert(`رصيدك ($${current.toFixed(2)}) غير كافٍ!\nتوجه لخانة (المهام) بالأسفل للاشتراك والحصول على $0.50 مجاناً.`);
+        alert(`رصيدك ($${current.toFixed(2)}) غير كافٍ!\nتوجه لخانة (المهام) بالأسفل لجمع الرصيد مجاناً.`);
         return;
       }
 
@@ -802,9 +917,9 @@
       document.getElementById('binanceTx').value = '';
     }
 
-    // الدعم الفني
+    // الدعم الفني المباشر بيوزرك @J_vv_5
     function contactDev() {
-      const dev = "your_username";
+      const dev = "J_vv_5";
       if (tg) {
         tg.openTelegramLink(`https://t.me/${dev}`);
       } else {
