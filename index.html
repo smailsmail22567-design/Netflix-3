@@ -22,7 +22,6 @@
       overflow-x: hidden;
     }
 
-    /* أنيميشن دخول نتفلكس بحرف N */
     #splash-screen {
       position: fixed;
       inset: 0;
@@ -64,7 +63,6 @@
       100% { transform: scale(6.5) translateZ(350px); opacity: 0; filter: brightness(2) blur(8px); }
     }
 
-    /* الشريط العلوي */
     .header {
       display: flex;
       justify-content: space-between;
@@ -100,20 +98,14 @@
       color: #4cd964;
     }
 
-    /* الحاوية */
     .container {
       padding: 16px;
       max-width: 480px;
       margin: 0 auto;
     }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    /* البانر الإعلاني */
     .banner {
       background: linear-gradient(180deg, #3d0507 0%, #1a0304 100%);
       border: 1px solid #5a1114;
@@ -135,7 +127,6 @@
       gap: 6px;
     }
 
-    /* بطاقات العروض */
     .card {
       background: #141414;
       border: 1px solid #262626;
@@ -214,7 +205,6 @@
       cursor: not-allowed;
     }
 
-    /* بطاقات قسم المهام */
     .task-card {
       background: #141414;
       border: 1px solid #262626;
@@ -253,7 +243,6 @@
       cursor: not-allowed;
     }
 
-    /* نافذة الشرح */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -297,7 +286,6 @@
     }
     .guide-step strong { color: #fff; display: block; margin-bottom: 4px; font-size: 14px; }
 
-    /* بينانس */
     .binance-box {
       background: #181818;
       border: 1px solid #333;
@@ -329,7 +317,6 @@
       font-size: 14px;
     }
 
-    /* الطلبات المشتراة */
     .order-item {
       background: #141414;
       border: 1px solid #262626;
@@ -362,7 +349,6 @@
       margin-top: 8px;
     }
 
-    /* الشريط السفلي */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -397,7 +383,6 @@
 </head>
 <body>
 
-  <!-- أنيميشن البداية N -->
   <div id="splash-screen">
     <div class="netflix-cinematic-wrap">
       <svg class="n-svg" viewBox="0 0 111 200" fill="none">
@@ -408,7 +393,6 @@
     </div>
   </div>
 
-  <!-- الشريط العلوي -->
   <div class="header">
     <div class="menu-btn" onclick="openGuideModal()">☰</div>
     <div class="brand-title">NETFLIX</div>
@@ -417,7 +401,6 @@
 
   <div class="container">
 
-    <!-- 1. الرئيسية -->
     <div id="tab-home" class="tab-content active">
       <div class="banner">
         <h3>متجر نتفلكس - تسليم فوري وتلقائي 🍿</h3>
@@ -426,7 +409,6 @@
 
       <div class="section-title">⚡ باقات الحسابات المتوفرة</div>
 
-      <!-- بطاقة حساب الهاتف -->
       <div class="card">
         <div class="card-header">
           <div>
@@ -441,7 +423,6 @@
         <button class="btn-action" id="phoneBuyBtn" onclick="purchase('رابط تفعيل', 0.50)">شراء الآن</button>
       </div>
 
-      <!-- بطاقة حساب التلفاز -->
       <div class="card">
         <div class="card-header">
           <div>
@@ -457,7 +438,6 @@
       </div>
     </div>
 
-    <!-- 2. خانة المهام -->
     <div id="tab-tasks" class="tab-content">
       <div class="banner">
         <h3>مهام جمع الرصيد المجاني 🎁</h3>
@@ -496,7 +476,6 @@
       </button>
     </div>
 
-    <!-- 3. شحن الرصيد -->
     <div id="tab-charge" class="tab-content">
       <div class="section-title">💳 شحن الرصيد عبر Binance Pay</div>
       <div class="binance-box">
@@ -511,28 +490,26 @@
       </div>
     </div>
 
-    <!-- 4. طلباتي -->
     <div id="tab-orders" class="tab-content">
       <div class="section-title">📦 الحسابات المشتراة</div>
       <div id="ordersContainer"></div>
     </div>
 
-    <!-- 5. الدعم الفني -->
     <div id="tab-support" class="tab-content">
       <div style="text-align: center; padding: 30px 16px; background: #141414; border-radius: 12px; border: 1px solid #222;">
         <div style="font-size:42px; margin-bottom:12px;">👨‍💻</div>
         <h3 style="font-size:17px; margin-bottom:8px;">الدعم الفني المباشر</h3>
-        <p style="font-size:12px; color:#aaa; margin-bottom:20px; line-height:1.6;">
-          تواصل مع المطور في حال واجهتك أي مشكلة أو كان لديك استفسار بخصوص الحسابات والشحن: <br>
+        <p style="font-size:12px; color:#aaa; margin-bottom:14px; line-height:1.6;">
+          تواصل مع المطور في حال واجهتك أي مشكلة أو كان لديك استفسار: <br>
           <b style="color:#e50914; font-size:14px; direction:ltr; display:inline-block; margin-top:4px;">@J_vv_5</b>
         </p>
         <button class="btn-action" style="background:#229ED9;" onclick="contactDev()">مراسلة المطور عبر تليجرام</button>
+        <button class="btn-action" style="background:#333; font-size:12px; margin-top:10px;" onclick="resetAllAppData()">إعادة ضبط الذاكرة المؤقتة 🔄</button>
       </div>
     </div>
 
   </div>
 
-  <!-- نافذة الشرح -->
   <div class="modal-overlay" id="guideModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -562,7 +539,6 @@
     </div>
   </div>
 
-  <!-- الشريط السفلي -->
   <div class="bottom-nav">
     <div class="nav-item active" id="nav-home" onclick="switchTab('home', this)">
       <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
@@ -592,15 +568,28 @@
       try { tg.ready(); tg.expand(); } catch (e) {}
     }
 
-    // استخراج معرف المستخدم لمنع التداخل بين الحسابات
-    function getUserId() {
-      if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
-        return "user_" + tg.initDataUnsafe.user.id;
-      }
-      return "user_guest";
+    // تنظيف إجباري للبيانات العامة القديمة المشتركة لمرة واحدة فقط
+    if (!localStorage.getItem('v3_cleaned_cache')) {
+      localStorage.removeItem('user_nf_balance');
+      localStorage.removeItem('orders_store');
+      localStorage.removeItem('tasks_claimed_status');
+      localStorage.removeItem('used_link_indexes');
+      localStorage.setItem('v3_cleaned_cache', 'true');
     }
 
-    // جميع الروابط
+    // التعرف على المستخدم وتوليد مفتاح مخصص له تماماً
+    function getUserId() {
+      if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+        return "u_" + tg.initDataUnsafe.user.id;
+      }
+      let localId = localStorage.getItem('app_session_uid');
+      if (!localId) {
+        localId = "guest_" + Math.floor(100000 + Math.random() * 900000);
+        localStorage.setItem('app_session_uid', localId);
+      }
+      return localId;
+    }
+
     const MASTER_NETFLIX_LINKS = [
       "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCASvx4GVq3/SqcrI7eGwaDmRBUljlvwcsQEFM95H29Ln8W1UmC3ojIRHpmDlU8jUz7uqJ8WFzXQZYon9gGMiprfN74GaMIGzhIIEeMPzjm20OS4zhAcUXXqjaVrF3Kd7ZO5hCFx+6DRTNLUGn+NsLj0sipujqnzgbQTmFYQMk+9QMUa2tl42xmtopc5XjBobHvT3htlsCYtdEesWdKz1/5ZsDWwrFvPya5VXBxvUr/P6p/LQ+6MGCoDuaSkpe0PpfukwSGAYiDgoMer+cl1kP+tg7Slda",
       "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAWy/1qMaU1LSKr/SdsEuZtX5bXbFlKzdhr7NtREGNl63UQandSMAzxub3tyVUslVxLftM+pfgrHzNL4AbNaY691emZzGZ33+Ja4gacD94cQQk7cS6iLg29A/WupoWIk+9v6df6DOefgsdCBSDOIP3YG+LEveh9wDEtYV0lHUWxAtfJUGs5Sad4vTmxP29tnOxYvNMYHpriNcbp7aUJlNYZ6r50Ub4NC7Cv2WuZDey6cCvz2j/Zj/jRiV+i33tnNcMMOyGAYiDgoMbqKJvQ6qE5b/LYdE",
@@ -622,7 +611,6 @@
       "https://netflix.com/unsupported?nftoken=Bgiqv+vcAxLCAQbxoDeqhjKapatEntznQRL96ChjNuuZ4fKSI3EuveL76j2vkptW0H66zH8IdjfYEz58RorxEDSUwy7lXJ9aftZQB+/IPF2I++tqwcSZZTVaYOh+9AgzwZxlBiBoSqvyWyH6A5BzuU0bckcqaercUx8udfWYBU8+NKkY75WIx+CvWeTPdClzzFpTq+hiOfnQT8yIfNj9tAvFiKq+b8KNC2lYt4++JV9j66hT+PvbMj2EkEcFZC8hDEZ9i3v78uaADAgWGAYiDgoMm2YVtd50ud/livjA"
     ];
 
-    // إدارة المخزون المحذوف عالمياً
     function getUsedLinks() {
       return JSON.parse(localStorage.getItem('globally_used_netflix_links') || '[]');
     }
@@ -661,7 +649,6 @@
       }
     }
 
-    // إدارة بيانات المستخدم الخاص الحالي
     function getUserKey(key) {
       return getUserId() + "_" + key;
     }
@@ -678,7 +665,6 @@
       if (badge) badge.innerText = `رصيدك: $${getBal().toFixed(2)}`;
     }
 
-    // شاشة البداية
     window.addEventListener('load', () => {
       setTimeout(() => {
         const splash = document.getElementById('splash-screen');
@@ -693,7 +679,6 @@
       initDailyBonusTimer();
     });
 
-    // إدارة المهمة اليومية للمستخدم الحالي
     let dailyInterval = null;
 
     function getDailyState() {
@@ -795,11 +780,9 @@
       }
     }
 
-    // نافذة الشرح
     function openGuideModal() { document.getElementById('guideModal').classList.add('active'); }
     function closeGuideModal() { document.getElementById('guideModal').classList.remove('active'); }
 
-    // مهام القنوات للمستخدم الحالي
     let ch1 = false, ch2 = false;
     function recordTaskClick(n) {
       if (n === 1) ch1 = true;
@@ -821,7 +804,6 @@
       switchTab('home', document.getElementById('nav-home'));
     }
 
-    // التبديل بين التبويبات
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -833,7 +815,6 @@
       if (tabId === 'orders') renderOrders();
     }
 
-    // عملية الشراء مع الحذف النهائي للرابط من المخزون
     function purchase(name, price) {
       if (name.includes('تلفاز')) {
         alert("عذراً، حسابات التلفاز غير متوفرة حالياً (المخزون 0)! يمكنك شراء حساب هاتف.");
@@ -853,14 +834,11 @@
       }
 
       if (confirm(`تأكيد شراء حساب نتفلكس (${name}) بقيمة $${price.toFixed(2)}؟`)) {
-        // سحب الرابط وحذفه من المتاح للأبد
         const chosenLink = available[0];
         markLinkAsUsed(chosenLink);
 
-        // خصم الرصيد
         setBal(current - price);
 
-        // حفظ الحساب في قائمة طلبات المستخدم الحالي فقط
         const orders = JSON.parse(localStorage.getItem(getUserKey('orders')) || '[]');
         orders.unshift({
           name: name,
@@ -874,7 +852,6 @@
       }
     }
 
-    // عرض طلبات المستخدم الحالي فقط
     function renderOrders() {
       const orders = JSON.parse(localStorage.getItem(getUserKey('orders')) || '[]');
       const container = document.getElementById('ordersContainer');
@@ -898,13 +875,11 @@
       `).join('');
     }
 
-    // نسخ معرف بينانس
     function copyId() {
       navigator.clipboard.writeText("82937104");
       alert("تم نسخ Binance ID بنجاح: 82937104");
     }
 
-    // إرسال رقم العملية
     function submitDeposit() {
       const tx = document.getElementById('binanceTx').value.trim();
       if (!tx) {
@@ -915,7 +890,6 @@
       document.getElementById('binanceTx').value = '';
     }
 
-    // الدعم الفني المباشر
     function contactDev() {
       const dev = "J_vv_5";
       if (tg) {
@@ -924,6 +898,14 @@
         window.open(`https://t.me/${dev}`, '_blank');
       }
     }
+
+    function resetAllAppData() {
+      if (confirm("هل تريد تصفير الذاكرة المؤقتة بالكامل لهذا الحساب؟")) {
+        localStorage.clear();
+        location.reload();
+      }
+    }
   </script>
 </body>
 </html>
+
